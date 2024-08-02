@@ -15,4 +15,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: docker build -t mindsearch .
+    
+    - name: Save Docker image
+      run: |
+        docker image save mindsearch -o my-docker-image.tar
+        tar -czf my-docker-image.tar.gz my-docker-image.tar
+        rm my-docker-image.tar
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: mindsearch
+        path: my-docker-image.tar.gz
